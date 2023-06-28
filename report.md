@@ -117,7 +117,7 @@ by Mustafa Al Quraishi
 
    - `cap_drop=["ALL"]`: This drops all Linux capabilities from the Docker container. Linux capabilities determine what privileges a process has, such as being able to bind to well-known ports, alter the system clock, and so on. By dropping all capabilities, we limit what a process can do, reducing the risk if the process or container is compromised.
 
-   - `volumes={f'{dockerfile_dir}/data': {'bind': '/data', 'mode': 'rw'}}`: The mode 'rw' means the mount is read-write, so the container can read from and write to the directory. This allows us to control the access the container has to the host's filesystem. In this case, the container can only read and write to the {dockerfile_dir}/data directory. Ideally we would mount a volume with the read-only mode, but the container needs to write to the /data directory, so we need to mount it with the read-write mode.
+   - `volumes={volume_mount: {'bind': '/data', 'mode': 'rw'}}`: The mode 'rw' means the mount is read-write, so the container can read from and write to the directory. This allows us to control the access the container has to the host's filesystem. In this case, the container can only read and write to the defined volume_mount directory. Ideally we would mount a volume with the read-only mode, but the container needs to write to the /data directory, so we need to mount it with the read-write mode.
 
 8. **Redis Implementation**
 
@@ -152,7 +152,7 @@ by Mustafa Al Quraishi
 
     - **More security checks** - Implemented more security checks for the Dockerfile. This includes checking for more commands that may be harmful to the system. This requires more reading and understanding.
 
-    - **Clean up Docker mode** - Docker in Docker approach introduces a bit more complexity, and forced me to define root host directory path to allow permissioned mounting of volumes. I would like to tidy up this approach and find a way to avoid having to configure an `.env` variable. Promising resources I may continue reading include [1]('https://github.com/kevana/ui-for-docker/tree/master') and [2]('https://www.reddit.com/r/docker/comments/5qdhq7/spawning_containers_from_within_a_container/').
+    - **Clean up Docker mode** - Docker in Docker approach introduces a bit more complexity, and forced me to define root host directory path to allow permissioned mounting of volumes. I would like to tidy up this approach and find a way to avoid having to configure an `.env` variable if possible. Promising resources I may continue reading include [1]('https://github.com/kevana/ui-for-docker/tree/master') and [2]('https://www.reddit.com/r/docker/comments/5qdhq7/spawning_containers_from_within_a_container/').
 
     - **Implement Remote mode** - This would include uses of Kubernetes, a better way of orchestrating our containers and perhaps bypass the issues found of the 'Docker In Docker' approach in Docker Mode.
 
