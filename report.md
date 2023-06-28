@@ -30,7 +30,7 @@ by Mustafa Al Quraishi
    experiment_summaries
       └── 123e4567-e89b-12d3-a456-426614174000 (this is an example UUID)/
          ├── Dockerfile
-            └── data
+         └── data
             └── perf.json
    ```
 

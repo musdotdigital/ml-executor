@@ -73,7 +73,7 @@ experiment_summaries
 └── 41c25721-1410-4559-b5b2-50d98b3b5f00
  ├── Dockerfile
  └── data
- └── perf.json
+   └── perf.json
 ```
 
 ### Check Celery Status
