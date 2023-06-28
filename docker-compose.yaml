@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  web:
+    environment:
+      - HOST_SERVICE_DIRECTORY=${HOST_SERVICE_DIRECTORY}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python run.py
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 5000:5000
+    depends_on:
+      - redis
+  worker:
+    environment:
+      - HOST_SERVICE_DIRECTORY=${HOST_SERVICE_DIRECTORY}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A backend.index.celery_app worker --loglevel=info
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - web
+      - redis
+  redis:
+    image: redis:latest

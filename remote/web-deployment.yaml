@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: localhost:5000/my-docker-image:tag # Attemped to use local docker registry
+          command: ["python", "run.py"]
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: /app
+              name: app-volume
+            - mountPath: /var/run/docker.sock
+              name: docker-sock-volume
+      volumes:
+        - name: app-volume
+          hostPath:
+            path: YOUR-PATH # TODO
+        - name: docker-sock-volume
+          hostPath:
+            path: /var/run/docker.sock

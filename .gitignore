@@ -1,0 +1,8 @@
+__pycache__/
+.DS_Store
+
+# Where experiments are saved
+experiment_summaries/
+
+# Redis stuff
+redis-stable/

@@ -1,0 +1,7 @@
+flask
+celery[redis]
+docker
+redis
+Flask-Limiter
+flask-marshmallow
+flask_testing
