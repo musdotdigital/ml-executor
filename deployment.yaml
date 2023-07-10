@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: docker-service
+  template:
+    metadata:
+      labels:
+        app: docker-service
+    spec:
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: docker-service-pvc
+      containers:
+        - name: docker-service
+          image: gcr.io/ringed-sentinel-391417/docker-service:latest
+          volumeMounts:
+            - mountPath: "/app"
+              name: my-volume
+          ports:
+            - containerPort: 80
