@@ -6,4 +6,4 @@ EXPERIMENT_SUMMARIES = 'experiment_summaries'
 
 app = Flask(__name__)
 
-app.config['BACKEND_TYPE'] = BackendType.LOCAL_SUBPROCESS
+app.config['BACKEND_TYPE'] = BackendType.LOCAL_DOCKER

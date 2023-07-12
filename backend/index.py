@@ -29,10 +29,21 @@ limiter = Limiter(
 )
 
 
-@app.route('/submit', methods=['POST'])
+@app.route('/jobs', methods=['POST', 'GET'])
+def jobs():
+    """
+    API endpoint to submit a job and check the status of a job.
+    """
+
+    if request.method == 'POST':
+        return submit()
+    elif request.method == 'GET':
+        return status()
+
+
 def submit():
-    """ 
-    API endpoint to submit a job. It validates the Dockerfile content, stores it on disk, 
+    """
+    API endpoint to submit a job. It validates the Dockerfile content, stores it on disk,
     and then queues the job for processing. It also maintains the job status in Redis.
 
     Args
@@ -58,7 +69,6 @@ def submit():
     return jsonify({'job_id': job_id}), 200
 
 
-@app.route('/status', methods=['GET'])
 def status():
     """
     API endpoint to check the status of a job. It fetches the job status from Redis using the job_id.
