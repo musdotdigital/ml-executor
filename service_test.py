@@ -3,9 +3,10 @@ from flask import json
 from flask_testing import TestCase
 from unittest.mock import patch
 
-from backend.index import app as flask_app 
+from backend.index import app as flask_app
 
 UUID = '123e4567-e89b-12d3-a456-426614174000'
+
 
 class TestApp(TestCase):
     def create_app(self):
@@ -38,7 +39,7 @@ class TestApp(TestCase):
         COPY . .
         """
         mock_submit_dockerfile.return_value = UUID
-    
+
         response = self.client.post('/submit', data=dockerfile_content)
 
         # Assert the request got a successful response
@@ -48,7 +49,7 @@ class TestApp(TestCase):
         data = json.loads(response.data)
         assert 'job_id' in data
         assert UUID == data['job_id']
-    
+
     def test_submit_endpoint_no_dockerfile(self):
         response = self.client.post('/submit')
 
@@ -58,8 +59,7 @@ class TestApp(TestCase):
         # Assert the error is in the response data
         data = json.loads(response.data)
         assert 'error' in data
-    
- 
+
     def test_submit_endpoint_invalid_dockerfile(self):
         dockerfile_content = """
         FROM ubuntu:latest
@@ -74,7 +74,7 @@ class TestApp(TestCase):
 
         # Assert the request got a unsuccessful response
         self.assert400(response)
-        
+
         # Assert the error is in the response data
         data = json.loads(response.data)
         assert 'error' in data
@@ -84,7 +84,7 @@ class TestApp(TestCase):
 
     @patch('backend.index.get_job_status')
     def test_status_endpoint(self, mock_get_job_status):
-      
+
         job_data = json.dumps({'job_status': 'processing'}).encode('utf-8')
         mock_get_job_status.return_value = job_data
 
@@ -97,8 +97,7 @@ class TestApp(TestCase):
 
         # Assert the job data is in the response
         data = json.loads(response.data)
-        assert 'job_status' in data 
-
+        assert 'job_status' in data
 
 
 # run the tests
