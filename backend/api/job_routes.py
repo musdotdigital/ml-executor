@@ -19,9 +19,6 @@ if app.config['BACKEND_TYPE'] == BackendType.LOCAL_SUBPROCESS:
 else:
     redis = Redis(host='redis', port=6379, db=0)
 
-# Create Docker client
-client = DockerClient.from_env()
-
 
 @shared_task
 def run_job(job_id: str):
@@ -34,10 +31,11 @@ def run_job(job_id: str):
     job_id : str
         Unique identifier for the job
     """
+    # Create Docker client
+    client = DockerClient.from_env()
 
     logging.info(f'Running job {job_id}')
 
-   
     if app.config['BACKEND_TYPE'] != BackendType.LOCAL_SUBPROCESS:
         # This should be the absolute path to owkin-docker-service folder
         # i.e. export HOST_SERVICE_DIRECTORY=User/dave/Documents/owkin-docker-service/
@@ -46,12 +44,11 @@ def run_job(job_id: str):
         if not BASE_DIR:
             raise Exception('HOST_SERVICE_DIRECTORY not defined')
     else:
-         BASE_DIR = os.getcwd()
-    
+        BASE_DIR = os.getcwd()
 
     dockerfile_dir = f'./{EXPERIMENT_SUMMARIES}/{job_id}'
     volume_mount = f'{BASE_DIR}/{dockerfile_dir}/data'
-   
+
     # Build and check vulnerabilities of Docker image
     try:
         logging.info(f'Building image {job_id}')
@@ -77,8 +74,8 @@ def run_job(job_id: str):
                               user="nobody",
                               cap_drop=["ALL"],
                               volumes={
-                                  volume_mount: {'bind': '/data', 'mode': 'rw'}}, 
-                              auto_remove=True, 
+                                  volume_mount: {'bind': '/data', 'mode': 'rw'}},
+                              auto_remove=True,
                               detach=True)
 
     except Exception as e:
@@ -131,9 +128,9 @@ def submit_dockerfile(dockerfile_content: str) -> str:
     # Run job asynchronously on Celery Worker
     run_job.delay(job_id)
 
-    logging.info(f'Submitted job {job_id} for dockerfile: {dockerfile_content}')
+    logging.info(
+        f'Submitted job {job_id} for dockerfile: {dockerfile_content}')
     return job_id
-
 
 
 def get_job_status(job_id: str) -> bytes | None:
@@ -145,7 +142,7 @@ def get_job_status(job_id: str) -> bytes | None:
     job_status : bytes | None
         Status of the job
     '''
-   
+
     job_status = redis.get(job_id)
 
     logging.info(f'Job {job_id} status: {job_status}')
@@ -156,24 +153,24 @@ def is_dockerfile_valid(dockerfile_content: str) -> bool:
     """
     Function to validate the content of a Dockerfile. It checks for any forbidden commands.
     """
-    
+
     forbidden_commands = set(("root", "EXPOSE", "ADD"))
-    
+
     dockerfile_content = re.sub(r'\n', ' ', dockerfile_content)
 
     logging.info(f"Validating dockerfile: {dockerfile_content.split(' ')}")
 
-    invalid_set = set(dockerfile_content.split(' ')).intersection(forbidden_commands)
+    invalid_set = set(dockerfile_content.split(
+        ' ')).intersection(forbidden_commands)
 
     logging.info(f'Invalid set: {invalid_set}')
-    
 
     if len(invalid_set) > 0:
         raise DockerCommandError(
             f"None of: `{'`, `'.join(forbidden_commands)}` can be used as"
             f" metadata key but `{' '.join(invalid_set)}` were/was found"
         )
-   
+
     logging.info('Dockerfile validation successful')
     return True
 
@@ -202,9 +199,11 @@ def _get_vulnerability_status(image_id: str) -> bool:
         r'HIGH: (\d+)', result.stdout.decode('utf-8'))
 
     # Check if the number of high vulnerabilities is more than 0
-    logging.info(f'High vulnerabilities: {int(high_vulnerabilities.group(1))}')
-    if high_vulnerabilities and int(high_vulnerabilities.group(1)) > 0:
-        return False
+    if high_vulnerabilities:
+        logging.info(
+            f'High vulnerabilities: {int(high_vulnerabilities.group(1))}')
+        if int(high_vulnerabilities.group(1)) > 0:
+            return False
 
     logging.info('No high vulnerabilities found')
     return True

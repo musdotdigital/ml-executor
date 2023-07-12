@@ -148,18 +148,6 @@ Define in your env file the following variables i.e. in your `~/.zshrc` or `~/.b
  EXPORT HOST_SERVICE_DIRECTORY=/path/to/directory
 ```
 
-## Getting Started (Remote/Kubernetes)
-
-`Note:` This mode is not ready currently. Preliminary pseudo-work to create manifests for all services can be found in `remote/`.
-
-## Testing
-
-To ensure that API is working as desired:
-
-```bash
-python service_test.py
-```
-
 ## Update Environment
 
 If you would like to update the conda env `owkin`:
