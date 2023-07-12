@@ -41,6 +41,27 @@ def jobs():
         return status()
 
 
+@app.route('/celery/tasks', methods=['GET'])
+@limiter.exempt
+def tasks():
+    """
+    API endpoint to get the current state of the Celery task queue.
+    """
+    return jsonify(get_tasks(celery_app)), 200
+
+
+@app.route('/celery/ping', methods=['GET'])
+@limiter.exempt
+def ping():
+    """
+    API endpoint to check the status of Celery workers.
+    """
+    if ping_celery(celery_app):
+        return jsonify({'status': 'success', 'message': 'Celery worker(s) is running.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'No running Celery worker(s) found.'})
+
+
 def submit():
     """
     API endpoint to submit a job. It validates the Dockerfile content, stores it on disk,
@@ -87,24 +108,3 @@ def status():
         return jsonify(json.loads(job_data.decode('utf-8'))), 200
     else:
         return jsonify({'error': 'Job not found'}), 404
-
-
-@app.route('/celery/tasks', methods=['GET'])
-@limiter.exempt
-def tasks():
-    """
-    API endpoint to get the current state of the Celery task queue.
-    """
-    return jsonify(get_tasks(celery_app)), 200
-
-
-@app.route('/celery/ping', methods=['GET'])
-@limiter.exempt
-def ping():
-    """
-    API endpoint to check the status of Celery workers.
-    """
-    if ping_celery(celery_app):
-        return jsonify({'status': 'success', 'message': 'Celery worker(s) is running.'})
-    else:
-        return jsonify({'status': 'error', 'message': 'No running Celery worker(s) found.'})
