@@ -1,5 +1,6 @@
 import re
 import os
+import shutil
 import uuid
 import json
 import subprocess
@@ -87,6 +88,9 @@ def run_job(job_id: str):
     try:
         with open(f'{dockerfile_dir}/data/perf.json', 'r') as f:
             perf = json.load(f)['perf']
+
+        # Clean up directory
+        shutil.rmtree(dockerfile_dir)
 
     except Exception as e:
         logging.error(
