@@ -1,4 +1,4 @@
-name: owkin
+name: ml-executor
 channels:
   - conda
   - conda-forge

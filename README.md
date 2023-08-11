@@ -98,10 +98,10 @@ Set up a virtual environment and install dependencies with the `Makefile`:
 make install
 ```
 
-Make sure you are in the `owkin` virtual env:
+Make sure you are in the `ml-executor` virtual env:
 
 ```
-conda activate owkin
+conda activate ml-executor
 ```
 
 Start the Redis server:
@@ -148,7 +148,7 @@ Define in your env file the following variables i.e. in your `~/.zshrc` or `~/.b
 
 ## Update Environment
 
-If you would like to update the conda env `owkin`:
+If you would like to update the conda env `ml-executor`:
 
 ```bash
 make update
@@ -156,7 +156,7 @@ make update
 
 ## Delete Environment
 
-If you would like to delete the conda env `owkin`:
+If you would like to delete the conda env `ml-executor`:
 
 ```bash
 make clean

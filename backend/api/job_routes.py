@@ -38,8 +38,8 @@ def run_job(job_id: str):
     logging.info(f'Running job {job_id}')
 
     if app.config['BACKEND_TYPE'] != BackendType.LOCAL_SUBPROCESS:
-        # This should be the absolute path to owkin-docker-service folder
-        # i.e. export HOST_SERVICE_DIRECTORY=User/dave/Documents/owkin-docker-service/
+        # This should be the absolute path to ml-executor folder
+        # i.e. export HOST_SERVICE_DIRECTORY=User/dave/Documents/ml-executor/
         BASE_DIR = os.getenv('HOST_SERVICE_DIRECTORY', '')
 
         if not BASE_DIR:
