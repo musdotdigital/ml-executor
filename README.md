@@ -1,12 +1,10 @@
-# Owkin Docker Service
+# ML Executor
 
 Flask API service that receives and executes docker files asynchronously with Celery workers.
 
 The full report can be found in `report.md.`
 
 By Mustafa Al Quraishi
-
-`Note:` This repository is in part for the fulfilment of an Owkin Technical Challenge, it is by no means affiliated with Owkin.
 
 ## Prerequisites
 
